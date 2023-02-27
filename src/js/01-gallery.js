@@ -1,28 +1,28 @@
-import { galleryItems, createGalleryItem } from "./gallery-items.js";
-const galleryMarkup = galleryItems.map(createGalleryItem).join("");
+import { galleryItems } from "./gallery-items.js";
 // Change code below this line
-import * as basicLightbox from "https://cdn.jsdelivr.net/npm/basiclightbox@5.0.4/dist/basicLightbox.min.js";
 
-const galleryList = document.querySelector(".gallery");
+const gallery = document.querySelector(".gallery");
+const galleryItem = galleryItems
+  .map(
+    (item) =>
+      `<a class="gallery__item" href="${item.original}"><img src="${item.preview}"  class="gallery__image" alt="${item.description}" data-source="${item.original}"></img></a>`
+  )
+  .join("");
+gallery.innerHTML = galleryItem;
 
-galleryList.insertAdjacentHTML("beforeend", galleryMarkup);
+document.querySelectorAll(".gallery__image").forEach((image) => {
+  image.addEventListener("click", (event) => {
+    event.preventDefault();
+    const instance = basicLightbox.create(`
+        <img width="1400" height="900" src="${event.target.dataset.source}">
+      `);
+    instance.show();
+    document.addEventListener("keydown", (event) => {
+      if (event.keyCode === 27) {
+        instance.close();
+      }
+    });
+  });
+});
 
-galleryList.addEventListener("click", onGalleryClick);
-
-function onGalleryClick(event) {
-  event.preventDefault();
-
-  const isGalleryItem = event.target.classList.contains("gallery__image");
-  if (!isGalleryItem) {
-    return;
-  }
-
-  const imageUrl = onGalleryClick.dataset.source;
-
-  const instance = basicLightbox.create(`
-    <img src="${preview}" width="800" height="600">
-  `);
-
-  instance.show();
-}
 console.log(galleryItems);
