@@ -13,6 +13,7 @@ gallery.innerHTML = galleryItem;
 document.querySelectorAll(".gallery__image").forEach((image) => {
   image.addEventListener("click", (event) => {
     event.preventDefault();
+    if (event.target.nodeName !== "IMG") return;
     const instance = basicLightbox.create(`
         <img width="1400" height="900" src="${event.target.dataset.source}">
       `);
